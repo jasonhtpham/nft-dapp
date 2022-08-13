@@ -18,6 +18,7 @@ const MINIMUM_ALGO_AMOUNT = 100000;
 const WalletConnect = (props) => {
   const [algoAccount, setAlgoAccount] = useState(null);
   const [accountInfo, setAccountInfo] = useState(null);
+
   const isConnectedToPeraWallet = !!algoAccount;
 
   useEffect(() => {
@@ -125,6 +126,7 @@ const WalletConnect = (props) => {
           : null}
 
       </Container>
+
     </Box>
 
   )

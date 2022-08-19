@@ -6,7 +6,7 @@ import NavBar from './components/AppBar';
 const App = () => {
   return (
     <div>
-      <NavBar title="Set Number Dapp" />
+      <NavBar title="NFTs Minter" />
       <AppRoutes />
     </div >
   )

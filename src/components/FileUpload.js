@@ -8,12 +8,7 @@ import algosdk, { waitForConfirmation } from 'algosdk';
 const PUBLIC_GATEWAY_URL = 'https://gateway.pinata.cloud/ipfs/';
 const ALGO_EXPLORER_ASSET_URL = 'https://testnet.algoexplorer.io/asset/';
 
-const DEFAULT_FROZEN = false;
-const MANAGER_ADDRESS = undefined;
-const RESERVE_ADDRESS = undefined;
-const FREEZE_ADDRESS = undefined;
-const CLAWBACK_ADDRESS = undefined;
-// const METADATA_HASH = undefined;
+// TODO1: create some constants for mint NFT
 
 const style = {
   container: {
@@ -48,74 +43,13 @@ const FileUpload = (props) => {
   const [loading, setLoading] = useState(false);
   const [tokenId, setTokenId] = useState(null);
 
-  // const [defaultFrozen, setDefaultFrozen] = useState(false);
-  // const [managerAddress, setManagerAddress] = useState('');
-  // const [reserveAddress, setReserveAddress] = useState('');
-  // const [freezeAddress, setFreezeAddress] = useState('');
-  // const [clawbackAddress, setClawbackAddress] = useState('');
-  // const [metadataHash, setMetadataHash] = useState('');
-
+  // TODO3: create a function to take user inputs and mint the NFT
   const mintNft = async () => {
-    try {
-      setLoading(true);
-      const suggestedParams = await props.algoClient.getTransactionParams().do();
 
-      const tokenURL = PUBLIC_GATEWAY_URL + imageHash;
-      console.log('tokenURL', tokenURL);
-
-      const transaction = algosdk.makeAssetCreateTxnWithSuggestedParams(
-        props.account,
-        new Uint8Array(Buffer.from(note)),
-        amount,
-        tokenDecimalPlace,
-        DEFAULT_FROZEN,
-        MANAGER_ADDRESS,
-        RESERVE_ADDRESS,
-        FREEZE_ADDRESS,
-        CLAWBACK_ADDRESS,
-        unitName,
-        tokenName,
-        tokenURL,
-        imageHash.path,
-        suggestedParams
-      )
-
-      const transactionDetails = [{ txn: transaction, signers: [props.account] }];
-
-      const signedTx = await props.wallet.signTransaction([transactionDetails]);
-      console.log(signedTx);
-
-
-      const { txId } = await props.algoClient.sendRawTransaction(signedTx).do();
-      console.log(txId);
-
-      const result = await waitForConfirmation(props.algoClient, txId, 2);
-      alert(`An NFT is minted with assetID: ${result['asset-index']}`);
-      setTokenId(result['asset-index']);
-      setLoading(false);
-      setModalStatus(false);
-    } catch (error) {
-      setLoading(false);
-      setModalStatus(false);
-      alert(error);
-    }
   }
 
+  // TODO2: update handleUploadImage to use the ipfs hash to create the NFT
   const handleUploadImage = async (event) => {
-    const imgObject = event.target.files[0]
-    imgObject.preview = URL.createObjectURL(event.target.files[0]);
-    setImage(imgObject);
-    setLoading(true);
-    try {
-      const ipfsImage = await ipfs.add(imgObject);
-      setImageHash(ipfsImage.path)
-      setLoading(false);
-      setModalStatus(true);
-      // alert(`Image uploaded! Check image by accessing ${PUBLIC_GATEWAY_URL}${ipfsImage.path}`);
-    } catch (e) {
-      setLoading(false);
-      console.error(e);
-    }
 
   };
 
@@ -165,7 +99,7 @@ const FileUpload = (props) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <TextField // TODO: to be converted to Bytes
+          <TextField
             id="note"
             name="note"
             label="Note"

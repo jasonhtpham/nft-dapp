@@ -117,9 +117,9 @@ const WalletConnect = (props) => {
           {isConnectedToPeraWallet ? "Disconnect" : "Connect to Pera Wallet"}
         </Button>
 
-        {isConnectedToPeraWallet && accountInfo?.amount > MINIMUM_ALGO_AMOUNT
+        {/* {isConnectedToPeraWallet && accountInfo?.amount > MINIMUM_ALGO_AMOUNT
           ? <SetNumber account={algoAccount} wallet={peraWallet} algoClient={algoClient} />
-          : null}
+          : null} */}
 
         {isConnectedToPeraWallet && accountInfo?.amount > MINIMUM_ALGO_AMOUNT
           ? <FileUpload account={algoAccount} wallet={peraWallet} algoClient={algoClient} />

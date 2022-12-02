@@ -5,10 +5,9 @@ import { EnhancedModal } from './common/Modal';
 import { ipfs } from '../helpers/ipfs';
 import algosdk, { waitForConfirmation } from 'algosdk';
 
-const PUBLIC_GATEWAY_URL = 'https://gateway.pinata.cloud/ipfs/';
-const ALGO_EXPLORER_ASSET_URL = 'https://testnet.algoexplorer.io/asset/';
+// TODO1: Create a constant for the public gateway URL to retrieve uploaded images from IPFS
 
-// TODO1: create some constants for mint NFT
+// TODO2: create some constants for mint NFT
 
 const style = {
   container: {
@@ -43,12 +42,12 @@ const FileUpload = (props) => {
   const [loading, setLoading] = useState(false);
   const [tokenId, setTokenId] = useState(null);
 
-  // TODO3: create a function to take user inputs and mint the NFT
+  // TODO4: create a function to take user inputs and mint the NFT
   const mintNft = async () => {
 
   }
 
-  // TODO2: update handleUploadImage to use the ipfs hash to create the NFT
+  // TODO3: create handleUploadImage to use the ipfs hash to create the NFT
   const handleUploadImage = async (event) => {
 
   };
@@ -116,7 +115,8 @@ const FileUpload = (props) => {
             name="url"
             label="Token URL"
             fullWidth
-            defaultValue={`${PUBLIC_GATEWAY_URL}${imageHash}`}
+            // Uncomment this to use the created constant
+            // defaultValue={`${PUBLIC_GATEWAY_URL}${imageHash}`}
             variant="standard"
             disabled
           />
@@ -163,10 +163,11 @@ const FileUpload = (props) => {
           </div>
         )}
 
-        {tokenId && (
+        {/* Uncomment this to use provide link for user to check NFT */}
+        {/* {tokenId && (
           <Link href={`${ALGO_EXPLORER_ASSET_URL}${tokenId}`} underline="none">
             Check Your NFT on Algo Explorer
-          </Link>)}
+          </Link>)} */}
 
         <input
           style={{ display: 'none' }}

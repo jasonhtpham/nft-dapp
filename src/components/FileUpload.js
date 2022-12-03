@@ -6,8 +6,15 @@ import { ipfs } from '../helpers/ipfs';
 import algosdk, { waitForConfirmation } from 'algosdk';
 
 // TODO1: Create a constant for the public gateway URL to retrieve uploaded images from IPFS
+const PUBLIC_GATEWAY_URL = 'https://gateway.pinata.cloud/ipfs/';
+const ALGO_EXPLORER_ASSET_URL = 'https://testnet.algoexplorer.io/asset/';
 
 // TODO2: create some constants for mint NFT
+const DEFAULT_FROZEN = false;
+const MANAGER_ADDRESS = undefined;
+const RESERVE_ADDRESS = undefined;
+const FREEZE_ADDRESS = undefined;
+const CLAWBACK_ADDRESS = undefined;
 
 const style = {
   container: {
@@ -44,11 +51,65 @@ const FileUpload = (props) => {
 
   // TODO4: create a function to take user inputs and mint the NFT
   const mintNft = async () => {
+    try {
+      setLoading(true)
+      const suggestedParams = await props.algoClient.getTransactionParams().do();
 
+      const tokenURL = PUBLIC_GATEWAY_URL + imageHash;
+
+      const transaction = algosdk.makeAssetCreateTxnWithSuggestedParams(
+        props.account,
+        new Uint8Array(Buffer.from(note)),
+        amount,
+        tokenDecimalPlace,
+        DEFAULT_FROZEN,
+        MANAGER_ADDRESS,
+        RESERVE_ADDRESS,
+        FREEZE_ADDRESS,
+        CLAWBACK_ADDRESS,
+        unitName,
+        tokenName,
+        tokenURL,
+        imageHash.path,
+        suggestedParams
+      )
+      const transactionDetails = [{ txn: transaction, signers: [props.account] }];
+
+      const signedTx = await props.wallet.signTransaction([transactionDetails]);
+      console.log(signedTx);
+
+      const { txId } = await props.algoClient.sendRawTransaction(signedTx).do();
+      console.log(txId);
+
+      const result = await waitForConfirmation(props.algoClient, txId, 2);
+
+      alert(`An NFT is minted with assetID: ${result['asset-index']}`);
+      setTokenId(result['asset-index']);
+      setLoading(false);
+      setModalStatus(false);
+
+    } catch (e) {
+      setLoading(false);
+      setModalStatus(false);
+      alert(e);
+    }
   }
 
   // TODO3: create handleUploadImage to use the ipfs hash to create the NFT
   const handleUploadImage = async (event) => {
+    const imgObject = event.target.files[0]
+    imgObject.preview = URL.createObjectURL(event.target.files[0]);
+    setImage(imgObject);
+    setLoading(true);
+    try {
+      const ipfsImage = await ipfs.add(imgObject);
+      setImageHash(ipfsImage.path)
+      setLoading(false);
+      setModalStatus(true);
+    } catch (e) {
+      setLoading(false);
+      console.error(e);
+    }
 
   };
 
@@ -116,7 +177,7 @@ const FileUpload = (props) => {
             label="Token URL"
             fullWidth
             // Uncomment this to use the created constant
-            // defaultValue={`${PUBLIC_GATEWAY_URL}${imageHash}`}
+            defaultValue={`${PUBLIC_GATEWAY_URL}${imageHash}`}
             variant="standard"
             disabled
           />
@@ -164,10 +225,10 @@ const FileUpload = (props) => {
         )}
 
         {/* Uncomment this to use provide link for user to check NFT */}
-        {/* {tokenId && (
+        {tokenId && (
           <Link href={`${ALGO_EXPLORER_ASSET_URL}${tokenId}`} underline="none">
             Check Your NFT on Algo Explorer
-          </Link>)} */}
+          </Link>)}
 
         <input
           style={{ display: 'none' }}

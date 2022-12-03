@@ -3,12 +3,14 @@ import { Container, Box, Card, CardMedia, Typography, Grid, Button } from '@mui/
 import { PeraWalletConnect } from '@perawallet/connect';
 import algosdk from 'algosdk';
 import LogoProfile from '../assets/logo_profile.png';
-import SetNumber from './SetNumber';
+// import SetNumber from './SetNumber';
 import FileUpload from './FileUpload';
 
 
 // Initialize the PeraWalletConnect instance
-const peraWallet = new PeraWalletConnect();
+const peraWallet = new PeraWalletConnect({
+  network: "testnet"
+});
 
 // Initialize an Algorand algoClient
 const algoClient = new algosdk.Algodv2('', 'https://testnet-api.algonode.cloud', 443);
@@ -25,13 +27,14 @@ const WalletConnect = (props) => {
     // Connect to Pera Wallet on load
     // This will help if user previously connected to Pera Wallet
     peraWallet.reconnectSession().then((accounts) => {
-      // Disconnection event listener
-      peraWallet.connector?.on('disconnect', handleDisconnectWalletClick);
+      // Setup the disconnect event listener
+      peraWallet.connector?.on("disconnect", handleDisconnectWalletClick);
 
-      if (accounts.length > 0) {
+      if (peraWallet.isConnected && accounts.length) {
         setAlgoAccount(accounts[0]);
       }
-    })
+    });
+
   }, []);
 
   useEffect(() => {

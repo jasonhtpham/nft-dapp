@@ -165,7 +165,7 @@ const FileUpload = (props) => {
 
         {/* TODO5: Uncomment this to use provide link for user to check NFT */}
         {/* {tokenId && (
-          <Link href={`${ALGO_EXPLORER_ASSET_URL}${tokenId}`} underline="none">
+          <Link href={`${ALGO_EXPLORER_ASSET_URL}${tokenId}`} underline="none" target="_blank" rel="noopener noreferrer">
             Check Your NFT on Algo Explorer
           </Link>)} */}
 

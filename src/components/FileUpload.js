@@ -81,7 +81,7 @@ const FileUpload = (props) => {
       const { txId } = await props.algoClient.sendRawTransaction(signedTx).do();
       console.log(txId);
 
-      const result = await waitForConfirmation(props.algoClient, txId, 2);
+      const result = await waitForConfirmation(props.algoClient, txId, 5);
 
       alert(`An NFT is minted with assetID: ${result['asset-index']}`);
       setTokenId(result['asset-index']);
@@ -226,7 +226,7 @@ const FileUpload = (props) => {
 
         {/* Uncomment this to use provide link for user to check NFT */}
         {tokenId && (
-          <Link href={`${ALGO_EXPLORER_ASSET_URL}${tokenId}`} underline="none">
+          <Link href={`${ALGO_EXPLORER_ASSET_URL}${tokenId}`} underline="none" target="_blank" el="noopener noreferrer">
             Check Your NFT on Algo Explorer
           </Link>)}
 

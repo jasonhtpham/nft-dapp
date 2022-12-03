@@ -3,7 +3,6 @@ import { Container, Box, Card, CardMedia, Typography, Grid, Button } from '@mui/
 import { PeraWalletConnect } from '@perawallet/connect';
 import algosdk from 'algosdk';
 import LogoProfile from '../assets/logo_profile.png';
-import SetNumber from './SetNumber';
 import FileUpload from './FileUpload';
 
 
@@ -28,7 +27,7 @@ const WalletConnect = (props) => {
       // Disconnection event listener
       peraWallet.connector?.on('disconnect', handleDisconnectWalletClick);
 
-      if (accounts.length > 0) {
+      if (peraWallet.isConnected && accounts.length) {
         setAlgoAccount(accounts[0]);
       }
     })
@@ -116,10 +115,6 @@ const WalletConnect = (props) => {
         >
           {isConnectedToPeraWallet ? "Disconnect" : "Connect to Pera Wallet"}
         </Button>
-
-        {/* {isConnectedToPeraWallet && accountInfo?.amount > MINIMUM_ALGO_AMOUNT
-          ? <SetNumber account={algoAccount} wallet={peraWallet} algoClient={algoClient} />
-          : null} */}
 
         {isConnectedToPeraWallet && accountInfo?.amount > MINIMUM_ALGO_AMOUNT
           ? <FileUpload account={algoAccount} wallet={peraWallet} algoClient={algoClient} />
